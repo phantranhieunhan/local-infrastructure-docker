@@ -60,7 +60,7 @@ services:
     environment:
       RAVEN_ARGS: --Setup.Mode=None --Security.UnsecuredAccessAllowed=PublicNetwork --License.Eula.Accepted=true
   redis:
-    image: bitnami/redis:latest
+    image: redis:latest
     container_name: redis_container
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended for development.
