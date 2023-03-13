@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  edgedb:
+    image: edgedb/edgedb
+    environment:
+      EDGEDB_SERVER_SECURITY: insecure_dev_mode
+    volumes:
+      - "./data/edgedb:/dbschema"
+    ports:
+      - "5656:5656"
   postgres-plv8:
     image: clkao/postgres-plv8
     container_name: postgres-plv8_container
