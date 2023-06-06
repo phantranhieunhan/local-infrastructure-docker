@@ -105,3 +105,4 @@ services:
     container_name: rabbitmq_management_container
     ports:
       - 15672:15672
+  
