@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  kafka_ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8888:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: true
+    volumes:
+      - ./kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+    networks:
+      - mynet
+  zookeeper:
+    container_name: zookeeper-dev
+    image: confluentinc/cp-zookeeper:7.3.3
+    ports:
+      - "2181:2181"
+    networks:
+      - mynet
+    volumes:
+      - "zookeeper_data:/bitnami/zookeeper"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_SYNC_LIMIT=2
+  kafka:
+    # working_dir: /bin
+    container_name: kafka-dev
+    image: confluentinc/cp-kafka:7.3.3
+    ports:
+      - "9092:9092"
+    networks:
+      - mynet
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT_HOST://localhost:9092,PLAINTEXT://kafka:19092
+      - KAFKA_BROKER_ID=2
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    depends_on:
+      - zookeeper
+    volumes:
+      - "kafka_data:/bitnami/kafka"
+networks:
+  mynet:
+    driver: bridge
+volumes:
+  zookeeper_data:
+  kafka_data:
